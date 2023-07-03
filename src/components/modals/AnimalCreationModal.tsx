@@ -1,7 +1,7 @@
 'use client';
 
 import { Animal, Area, Specie } from '@/context/interface';
-import { sessionAtom, areasAtom } from '@/context/store';
+import { sessionAtom } from '@/context/store';
 import { useAtom } from 'jotai';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
@@ -49,8 +49,7 @@ const AnimalCreationModal = () => {
     getAllAreas().then((areas: Area[]) => {
       setAreas(areas);
     });
-    console.log(animalForm);
-  }, [animalForm]);
+  }, []);
 
   return (
     <dialog id='my_modal_3' className='modal'>

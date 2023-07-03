@@ -1,6 +1,11 @@
 'use client';
 
-import { AnimalCreationModal, AreaCreationModal, Register } from '@/components';
+import {
+  AnimalCreationModal,
+  AreaCreationModal,
+  Register,
+  UserCreationModal,
+} from '@/components';
 import SpecieCreationModal from '@/components/modals/SpecieCreationModal';
 import { User } from '@/context/interface';
 import { sessionAtom } from '@/context/store';
@@ -52,7 +57,7 @@ const Page = () => {
             <div className='flex flex-col'>
               <div
                 className='flex shadow-xl rounded-xl border border-black justify-center items-center w-[240px] md:w-auto
-          py-2 px-8 gap-8 h-[200px]'
+                py-2 px-8 gap-8 h-[200px]'
               >
                 <div className='flex flex-col items-center justify-center'>
                   <div className='rounded-full bg-gray-900 text-white font-bold text-2xl py-4 px-6 uppercase'>
@@ -115,10 +120,16 @@ const Page = () => {
 
               <button
                 className='px-4 py-2 border border-black rounded-lg hover:bg-slate-600 hover:text-white mt-2'
-                onClick={() => {}}
+                onClick={() =>
+                  document &&
+                  (
+                    document.getElementById('my_modal_4') as HTMLFormElement
+                  ).showModal()
+                }
               >
-                Updater un utilisateur
+                Créer un utilisateur
               </button>
+              <UserCreationModal />
             </div>
 
             <div>

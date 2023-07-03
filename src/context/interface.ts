@@ -21,8 +21,8 @@ export interface User {
   id: string;
   email: string;
   password: string;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
   firstName: string;
   lastName: string;
   role:
@@ -30,7 +30,8 @@ export interface User {
     | 'receptioniste'
     | 'veterinaire'
     | 'agentEntretien'
-    | 'vendeur';
+    | 'vendeur'
+    | 'undefined';
 }
 
 export interface refreshToken {
