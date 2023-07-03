@@ -6,6 +6,7 @@ import Register from './Register';
 import SpeciesView from './SpeciesView';
 import AreaCreationModal from './modals/AreaCreationModal';
 import SpeciesCreationModal from './modals/SpecieCreationModal';
+import AnimalCreationModal from './modals/AnimalCreationModal';
 
 export {
   Sidebar,
@@ -16,4 +17,5 @@ export {
   SpeciesView,
   AreaCreationModal,
   SpeciesCreationModal,
+  AnimalCreationModal,
 };

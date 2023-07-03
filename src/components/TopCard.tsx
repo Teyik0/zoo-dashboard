@@ -1,7 +1,7 @@
 import { Animal, Specie } from '@/context/interface';
 import { Visitor } from 'typescript';
 
-const getAllAnimals = async (): Promise<Animal[]> => {
+export const getAllAnimals = async (): Promise<Animal[]> => {
   const res = await fetch(`${'http://localhost:3000'}/animal`, {
     method: 'GET',
     next: { revalidate: 60 },
@@ -17,7 +17,7 @@ export const getAllSpecies = async (): Promise<Specie[]> => {
   const data = await res.json();
   return data;
 };
-const getAllVisitors = async (): Promise<Visitor[]> => {
+export const getAllVisitors = async (): Promise<Visitor[]> => {
   const res = await fetch(`${'http://localhost:3000'}/visitor`, {
     method: 'GET',
     next: { revalidate: 60 },

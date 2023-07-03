@@ -1,6 +1,6 @@
 'use client';
 
-import { AreaCreationModal, Register } from '@/components';
+import { AnimalCreationModal, AreaCreationModal, Register } from '@/components';
 import SpecieCreationModal from '@/components/modals/SpecieCreationModal';
 import { User } from '@/context/interface';
 import { sessionAtom } from '@/context/store';
@@ -102,10 +102,17 @@ const Page = () => {
 
               <button
                 className='px-4 py-2 border border-black rounded-lg hover:bg-slate-600 hover:text-white mt-2'
-                onClick={() => {}}
+                onClick={() =>
+                  document &&
+                  (
+                    document.getElementById('my_modal_3') as HTMLFormElement
+                  ).showModal()
+                }
               >
                 Ajouter un animal
               </button>
+              <AnimalCreationModal />
+
               <button
                 className='px-4 py-2 border border-black rounded-lg hover:bg-slate-600 hover:text-white mt-2'
                 onClick={() => {}}
