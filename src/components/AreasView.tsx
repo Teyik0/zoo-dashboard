@@ -5,6 +5,7 @@ import { useEffect } from 'react';
 import { useAtom } from 'jotai';
 import { currentAreaAtom, sessionAtom, areasAtom } from '@/context/store';
 import { Area } from '@/context/interface';
+import { toast } from 'react-hot-toast';
 
 export const getAllAreas = async (): Promise<Area[]> => {
   const res = await fetch(`${'http://localhost:3000'}/area`, {
@@ -79,6 +80,7 @@ const AreasView = () => {
                         }),
                       }
                     ).then(() => {
+                      toast.success('Espace mis à jour avec succès');
                       getAllAreas().then((areas) => setAreas(areas));
                     });
                 }}
@@ -108,6 +110,7 @@ const AreasView = () => {
                         }),
                       }
                     ).then(() => {
+                      toast.success('Espace mis à jour avec succès');
                       getAllAreas().then((areas) => setAreas(areas));
                     });
                 }}

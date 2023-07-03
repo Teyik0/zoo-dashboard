@@ -4,7 +4,8 @@ import AreasView from './AreasView';
 import Carousel from './Carousel';
 import Register from './Register';
 import SpeciesView from './SpeciesView';
-import AreaCreationModal from './AreaCreationModal';
+import AreaCreationModal from './modals/AreaCreationModal';
+import SpeciesCreationModal from './modals/SpecieCreationModal';
 
 export {
   Sidebar,
@@ -14,4 +15,5 @@ export {
   Register,
   SpeciesView,
   AreaCreationModal,
+  SpeciesCreationModal,
 };

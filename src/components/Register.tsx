@@ -104,7 +104,6 @@ const Register = () => {
 
   return (
     <section className='bg-white w-full border rounded-lg overflow-hidden'>
-      <Toaster />
       <div className='lg:grid lg:grid-cols-12'>
         <section className='relative flex h-32 items-end bg-gray-900 lg:col-span-5 lg:h-full xl:col-span-6'>
           {/* eslint-disable-next-line @next/next/no-img-element */}

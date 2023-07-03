@@ -4,7 +4,7 @@ import { Area } from '@/context/interface';
 import { sessionAtom } from '@/context/store';
 import { useAtom } from 'jotai';
 import { useState } from 'react';
-import { Toaster, toast } from 'react-hot-toast';
+import { toast } from 'react-hot-toast';
 
 const AreaCreationModal = () => {
   const [session] = useAtom(sessionAtom);
@@ -21,6 +21,15 @@ const AreaCreationModal = () => {
   });
 
   const handleClick = async () => {
+    if (
+      areaForm.name === '' ||
+      areaForm.capacity === 0 ||
+      areaForm.visiteDuration === 0 ||
+      areaForm.description === '' ||
+      areaForm.schedule === '' ||
+      areaForm.imagesUrl[0] === ''
+    )
+      return toast.error('Veuillez remplir tous les champs');
     const res = await fetch(`${'http://localhost:3000'}/area`, {
       method: 'POST',
       headers: {
@@ -39,7 +48,6 @@ const AreaCreationModal = () => {
 
   return (
     <dialog id='my_modal_1' className='modal'>
-      <Toaster />
       <form method='dialog' className='modal-box w-11/12 max-w-5xl'>
         <button className='btn btn-sm btn-circle btn-ghost absolute right-2 top-2'>
           ✕

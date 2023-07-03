@@ -1,10 +1,12 @@
 'use client';
 
 import { AreaCreationModal, Register } from '@/components';
+import SpecieCreationModal from '@/components/modals/SpecieCreationModal';
 import { User } from '@/context/interface';
 import { sessionAtom } from '@/context/store';
 import { useAtom } from 'jotai';
 import { useEffect, useState } from 'react';
+import { Toaster } from 'react-hot-toast';
 
 const Page = () => {
   const [session] = useAtom(sessionAtom);
@@ -35,6 +37,7 @@ const Page = () => {
         <Register />
       ) : (
         <div className='flex-1 padding-x'>
+          <Toaster />
           <div className='home__text-container'>
             <h1 className='text-4xl font-extrabold'>Compte</h1>
             <p>
@@ -86,10 +89,17 @@ const Page = () => {
 
               <button
                 className='px-4 py-2 border border-black rounded-lg hover:bg-slate-600 hover:text-white mt-2'
-                onClick={() => {}}
+                onClick={() =>
+                  document &&
+                  (
+                    document.getElementById('my_modal_2') as HTMLFormElement
+                  ).showModal()
+                }
               >
                 Ajouter une espèce
               </button>
+              <SpecieCreationModal />
+
               <button
                 className='px-4 py-2 border border-black rounded-lg hover:bg-slate-600 hover:text-white mt-2'
                 onClick={() => {}}
