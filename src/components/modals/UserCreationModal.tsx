@@ -4,7 +4,7 @@ import { User } from '@/context/interface';
 import { sessionAtom } from '@/context/store';
 import { Session } from '@/context/interface';
 import { useAtom } from 'jotai';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
 
 export const getAllUsers = async (session: Session): Promise<User[]> => {
@@ -19,7 +19,7 @@ export const getAllUsers = async (session: Session): Promise<User[]> => {
   return data;
 };
 
-const UserCreationModal = () => {
+const UserCreationModal = ({ user = false }: { user: User | false }) => {
   const [session] = useAtom(sessionAtom);
   const [userForm, setUserForm] = useState<User>({
     id: '',
@@ -30,35 +30,79 @@ const UserCreationModal = () => {
     role: 'undefined',
   });
 
+  useEffect(() => {
+    if (user) {
+      setUserForm(user);
+    }
+  }, [user]);
+
   const handleClick = async () => {
-    if (
-      userForm.firstName === '' ||
-      userForm.lastName === '' ||
-      userForm.email === '' ||
-      userForm.password === ''
-    )
-      return toast.error('Veuillez remplir tous les champs');
-    const res = await fetch(`${'http://localhost:3000'}/auth/register`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${session?.accessToken}`,
-      },
-      body: JSON.stringify(userForm),
-    });
-    const notification = toast.loading("Ajout de l'utilisateur en cours...");
-    if (res.status === 200) {
-      toast.success('Utilisateur ajouté avec succès', { id: notification });
-      setUserForm({
-        id: '',
-        firstName: '',
-        lastName: '',
-        email: '',
-        password: '',
-        role: 'undefined',
+    if (!user) {
+      if (
+        userForm.firstName === '' ||
+        userForm.lastName === '' ||
+        userForm.email === '' ||
+        userForm.password === ''
+      )
+        return toast.error('Veuillez remplir tous les champs');
+      const res = await fetch(`${'http://localhost:3000'}/auth/register`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${session?.accessToken}`,
+        },
+        body: JSON.stringify(userForm),
       });
+      const notification = toast.loading("Ajout de l'utilisateur en cours...");
+      if (res.status === 200) {
+        toast.success('Utilisateur ajouté avec succès', { id: notification });
+        setUserForm({
+          id: '',
+          firstName: '',
+          lastName: '',
+          email: '',
+          password: '',
+          role: 'undefined',
+        });
+      } else {
+        toast.error('Une erreur est survenue', { id: notification });
+      }
     } else {
-      toast.error('Une erreur est survenue', { id: notification });
+      if (
+        userForm.firstName === '' ||
+        userForm.lastName === '' ||
+        userForm.email === ''
+      )
+        return toast.error('Veuillez remplir tous les champs');
+      const res = await fetch(`${'http://localhost:3000'}/user/${user.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${session?.accessToken}`,
+        },
+        body: JSON.stringify({
+          firstName: userForm.firstName,
+          lastName: userForm.lastName,
+          email: userForm.email,
+          role: userForm.role,
+        }),
+      });
+      const notification = toast.loading(
+        "Modification de l'utilisateur en cours..."
+      );
+      if (res.status === 200) {
+        toast.success('Utilisateur modifié avec succès', { id: notification });
+        setUserForm({
+          id: '',
+          firstName: '',
+          lastName: '',
+          email: '',
+          password: '',
+          role: 'undefined',
+        });
+      } else {
+        toast.error('Une erreur est survenue', { id: notification });
+      }
     }
   };
 
@@ -68,7 +112,9 @@ const UserCreationModal = () => {
         <button className='btn btn-sm btn-circle btn-ghost absolute right-2 top-2'>
           ✕
         </button>
-        <h3 className='font-bold text-xl'>Créer un utilisateur</h3>
+        <h3 className='font-bold text-xl'>
+          {user ? "Mise à jour de l'utilisateur" : 'Créer un utilisateur'}
+        </h3>
 
         <form action='#' className='mt-8 grid grid-cols-6 gap-6'>
           <div className='col-span-6 sm:col-span-3'>
@@ -131,26 +177,28 @@ const UserCreationModal = () => {
               placeholder='Ex: alexischatillon@gmail.com'
             />
           </div>
-          <div className='col-span-6 sm:col-span-3'>
-            <label
-              htmlFor='email'
-              className='block text-sm font-medium text-gray-700'
-            >
-              Mot de passe
-            </label>
+          {!user && (
+            <div className='col-span-6 sm:col-span-3'>
+              <label
+                htmlFor='email'
+                className='block text-sm font-medium text-gray-700'
+              >
+                Mot de passe
+              </label>
 
-            <input
-              type='text'
-              id='password'
-              name='password'
-              className='mt-1 w-full rounded-md border-gray-200 bg-white text-sm h-8 border px-2 text-gray-700 shadow-sm'
-              onChange={(e) => {
-                setUserForm({ ...userForm, password: e.target.value });
-              }}
-              value={userForm.password}
-              placeholder='Ex: azerty123'
-            />
-          </div>
+              <input
+                type='text'
+                id='password'
+                name='password'
+                className='mt-1 w-full rounded-md border-gray-200 bg-white text-sm h-8 border px-2 text-gray-700 shadow-sm'
+                onChange={(e) => {
+                  setUserForm({ ...userForm, password: e.target.value });
+                }}
+                value={userForm.password}
+                placeholder='Ex: azerty123'
+              />
+            </div>
+          )}
         </form>
         <div className='mt-4'>
           <label
@@ -162,7 +210,7 @@ const UserCreationModal = () => {
 
           <select
             className='select select-bordered w-full max-w-xs focus:outline-none'
-            defaultValue={'undefined'}
+            defaultValue={user ? user.role : 'undefined'}
             onChange={(e) =>
               setUserForm({
                 ...userForm,

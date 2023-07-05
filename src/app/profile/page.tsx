@@ -77,7 +77,7 @@ const Page = () => {
               >
                 Créer un espace
               </button>
-              <AreaCreationModal />
+              <AreaCreationModal area={false} />
 
               <button
                 className='px-4 py-2 border border-black rounded-lg hover:bg-slate-600 hover:text-white mt-2'
@@ -90,7 +90,7 @@ const Page = () => {
               >
                 Ajouter une espèce
               </button>
-              <SpecieCreationModal />
+              <SpecieCreationModal specie={false} />
 
               <button
                 className='px-4 py-2 border border-black rounded-lg hover:bg-slate-600 hover:text-white mt-2'
@@ -116,7 +116,7 @@ const Page = () => {
               >
                 Créer un utilisateur
               </button>
-              <UserCreationModal />
+              <UserCreationModal user={false} />
             </div>
 
             <div>
