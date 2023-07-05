@@ -66,57 +66,60 @@ const Page = () => {
                   </div>
                 </div>
               </div>
-              <button
-                className='px-4 py-2 border border-black rounded-lg hover:bg-slate-600 hover:text-white mt-6'
-                onClick={() =>
-                  document &&
-                  (
-                    document.getElementById('my_modal_1') as HTMLFormElement
-                  ).showModal()
-                }
-              >
-                Créer un espace
-              </button>
-              <AreaCreationModal area={false} />
 
-              <button
-                className='px-4 py-2 border border-black rounded-lg hover:bg-slate-600 hover:text-white mt-2'
-                onClick={() =>
-                  document &&
-                  (
-                    document.getElementById('my_modal_2') as HTMLFormElement
-                  ).showModal()
-                }
-              >
-                Ajouter une espèce
-              </button>
-              <SpecieCreationModal specie={false} />
-
-              <button
-                className='px-4 py-2 border border-black rounded-lg hover:bg-slate-600 hover:text-white mt-2'
-                onClick={() =>
-                  document &&
-                  (
-                    document.getElementById('my_modal_3') as HTMLFormElement
-                  ).showModal()
-                }
-              >
-                Ajouter un animal
-              </button>
-              <AnimalCreationModal />
-
-              <button
-                className='px-4 py-2 border border-black rounded-lg hover:bg-slate-600 hover:text-white mt-2'
-                onClick={() =>
-                  document &&
-                  (
-                    document.getElementById('my_modal_4') as HTMLFormElement
-                  ).showModal()
-                }
-              >
-                Créer un utilisateur
-              </button>
-              <UserCreationModal user={false} />
+              {userInfo?.role === 'admin' && (
+                <>
+                  {' '}
+                  <button
+                    className='px-4 py-2 border border-black rounded-lg hover:bg-slate-600 hover:text-white mt-6'
+                    onClick={() =>
+                      document &&
+                      (
+                        document.getElementById('my_modal_1') as HTMLFormElement
+                      ).showModal()
+                    }
+                  >
+                    Créer un espace
+                  </button>
+                  <AreaCreationModal area={false} />
+                  <button
+                    className='px-4 py-2 border border-black rounded-lg hover:bg-slate-600 hover:text-white mt-2'
+                    onClick={() =>
+                      document &&
+                      (
+                        document.getElementById('my_modal_2') as HTMLFormElement
+                      ).showModal()
+                    }
+                  >
+                    Ajouter une espèce
+                  </button>
+                  <SpecieCreationModal specie={false} />
+                  <button
+                    className='px-4 py-2 border border-black rounded-lg hover:bg-slate-600 hover:text-white mt-2'
+                    onClick={() =>
+                      document &&
+                      (
+                        document.getElementById('my_modal_3') as HTMLFormElement
+                      ).showModal()
+                    }
+                  >
+                    Ajouter un animal
+                  </button>
+                  <AnimalCreationModal />
+                  <button
+                    className='px-4 py-2 border border-black rounded-lg hover:bg-slate-600 hover:text-white mt-2'
+                    onClick={() =>
+                      document &&
+                      (
+                        document.getElementById('my_modal_4') as HTMLFormElement
+                      ).showModal()
+                    }
+                  >
+                    Créer un utilisateur
+                  </button>
+                  <UserCreationModal user={false} />
+                </>
+              )}
             </div>
 
             <div>

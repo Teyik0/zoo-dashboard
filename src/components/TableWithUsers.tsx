@@ -3,11 +3,19 @@
 import { useEffect } from 'react';
 import UserCreationModal, { getAllUsers } from './modals/UserCreationModal';
 import { useAtom } from 'jotai';
-import { sessionAtom, usersAtom } from '@/context/store';
+import { sessionAtom, userInfoAtom, usersAtom } from '@/context/store';
 import { User } from '@/context/interface';
+import { getUserInfo } from '@/context/fetch';
 
 const Row = ({ user }: { user: User }) => {
   const [session] = useAtom(sessionAtom);
+  const [userInfo, setUserInfo] = useAtom(userInfoAtom);
+
+  useEffect(() => {
+    getUserInfo(userInfo, session).then((data) => {
+      if (data) setUserInfo(data);
+    });
+  }, [session, setUserInfo, userInfo]);
   return (
     <tr className='border-b hover:bg-slate-200 bg-gray-100'>
       <td className='p-3 px-5'>
@@ -22,9 +30,8 @@ const Row = ({ user }: { user: User }) => {
         <span>{user.role}</span>
       </td>
       <td className='p-3 px-5 flex justify-end gap-4'>
-        {session && (
+        {userInfo?.role === 'admin' && (
           <>
-            {' '}
             <button
               type='button'
               className='text-sm bg-blue-500 hover:bg-blue-700 text-white py-1 px-2 rounded focus:outline-none focus:shadow-outline'
@@ -79,7 +86,7 @@ const TableWithUsers = () => {
         <h1 className='px-4 py-4 font-bold text-2xl'>Tous les utilisateurs</h1>
         <div className='border w-full' />
         <div className='flex justify-center'>
-          <table className='w-full text-md bg-white shadow-md mb-4'>
+          <table className='w-full text-md bg-white shadow-md'>
             <tbody>
               <tr className='border-b'>
                 <th className='text-left p-3 px-5'>Name</th>
