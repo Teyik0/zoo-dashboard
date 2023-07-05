@@ -32,7 +32,6 @@ const AreasView = () => {
 
   useEffect(() => {
     getAllAreas().then((areas) => setAreas(areas));
-
     getUserInfo(userInfo, session).then((data) => {
       if (data) setUserInfo(data);
     });

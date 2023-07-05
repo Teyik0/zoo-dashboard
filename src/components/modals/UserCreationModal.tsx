@@ -7,7 +7,7 @@ import { useAtom } from 'jotai';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 
-export const getAllUsers = async (session: Session) => {
+export const getAllUsers = async (session: Session): Promise<User[]> => {
   const res = await fetch(`${'http://localhost:3000'}/user`, {
     method: 'GET',
     headers: {

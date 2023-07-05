@@ -1,57 +1,82 @@
-/* eslint-disable @next/next/no-img-element */
+'use client';
+
+import { useEffect } from 'react';
+import { getAllUsers } from './modals/UserCreationModal';
+import { useAtom } from 'jotai';
+import { sessionAtom, usersAtom } from '@/context/store';
+
+interface RowProps {
+  firstName: string;
+  lastName: string;
+  email: string;
+  role: string;
+}
+
+const Row = ({ firstName, lastName, email, role }: RowProps) => (
+  <tr className='border-b hover:bg-slate-200 bg-gray-100'>
+    <td className='p-3 px-5'>
+      <span className='capitalize'>
+        {firstName} {lastName}
+      </span>
+    </td>
+    <td className='p-3 px-5'>
+      <span>{email}</span>
+    </td>
+    <td className='p-3 px-5'>
+      <span>{role}</span>
+    </td>
+    <td className='p-3 px-5 flex justify-end gap-4'>
+      <button
+        type='button'
+        className='text-sm bg-blue-500 hover:bg-blue-700 text-white py-1 px-2 rounded focus:outline-none focus:shadow-outline'
+      >
+        Update
+      </button>
+      <button
+        type='button'
+        className='text-sm bg-red-500 hover:bg-red-700 text-white py-1 px-2 rounded focus:outline-none focus:shadow-outline'
+      >
+        Delete
+      </button>
+    </td>
+  </tr>
+);
 
 const TableWithUsers = () => {
+  const [session] = useAtom(sessionAtom);
+  const [users, setUsers] = useAtom(usersAtom);
+
+  useEffect(() => {
+    if (!session) return;
+    getAllUsers(session).then((users) => setUsers(users));
+  }, [session, setUsers]);
+
   return (
-    <div className='p-4 rounded-xl'>
-      <div className='shadow-md rounded-lg'>
-        <table className='w-full text-sm text-left text-gray-500 rounded-xl'>
-          <thead className='text-xs text-gray-700 uppercase bg-gray-50 border rounded-xl'>
-            <tr className='rounded-xl'>
-              <th scope='col' className='px-6 py-3 rounded-xl'>
-                Name
-              </th>
-              <th scope='col' className='px-6 py-3'>
-                Position
-              </th>
-              <th scope='col' className='px-6 py-3'>
-                Status
-              </th>
-              <th scope='col' className='px-6 py-3'>
-                Action
-              </th>
-            </tr>
-          </thead>
-          <tbody className='rounded-xl'>
-            <tr className='rounded-xl bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600'>
-              <th
-                scope='row'
-                className='flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white'
-              >
-                <div className='pl-3'>
-                  <div className='text-base font-semibold'>Neil Sims</div>
-                  <div className='font-normal text-gray-500'>
-                    neil.sims@flowbite.com
-                  </div>
-                </div>
-              </th>
-              <td className='px-6 py-4'>React Developer</td>
-              <td className='px-6 py-4'>
-                <div className='flex items-center'>
-                  <div className='h-2.5 w-2.5 rounded-full bg-green-500 mr-2'></div>{' '}
-                  Online
-                </div>
-              </td>
-              <td className='px-6 py-4'>
-                <a
-                  href='#'
-                  className='font-medium text-blue-600 dark:text-blue-500 hover:underline'
-                >
-                  Edit user
-                </a>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+    <div className='text-gray-900 p-4'>
+      <div className='border rounded-lg overflow-x-scroll'>
+        <h1 className='px-4 py-4 font-bold text-2xl'>Tous les utilisateurs</h1>
+        <div className='border w-full' />
+        <div className='flex justify-center'>
+          <table className='w-full text-md bg-white shadow-md mb-4'>
+            <tbody>
+              <tr className='border-b'>
+                <th className='text-left p-3 px-5'>Name</th>
+                <th className='text-left p-3 px-5'>Email</th>
+                <th className='text-left p-3 px-5'>Role</th>
+                <th></th>
+              </tr>
+              {users?.map((user) => (
+                <Row
+                  key={user.id}
+                  firstName={user.firstName}
+                  lastName={user.lastName}
+                  email={user.email}
+                  role={user.role}
+                />
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );
