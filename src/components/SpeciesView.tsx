@@ -3,20 +3,28 @@
 import Carousel from './Carousel';
 import { useEffect, useState } from 'react';
 import { useAtom } from 'jotai';
-import { currentSpecieAtom } from '@/context/store';
+import { currentSpecieAtom, sessionAtom, userInfoAtom } from '@/context/store';
 import { Specie } from '@/context/interface';
 import { getAllSpecies } from './TopCard';
+import Image from 'next/image';
+import { SpeciesCreationModal } from '.';
+import { getUserInfo } from '@/context/fetch';
 
 const SpeciesView = () => {
   const [current] = useAtom(currentSpecieAtom);
   const [species, setSpecies] = useState<Specie[] | null>(null);
+  const [userInfo, setUserInfo] = useAtom(userInfoAtom);
+  const [session] = useAtom(sessionAtom);
 
   useEffect(() => {
     getAllSpecies().then((species) => setSpecies(species));
-  }, []);
+    getUserInfo(userInfo, session).then((data) => {
+      if (data) setUserInfo(data);
+    });
+  }, [session, setUserInfo, userInfo]);
 
   return (
-    <div className='px-4 pb-4'>
+    <div className='px-4'>
       <div className='w-full border p-4 rounded-lg'>
         <div className='flex flex-col w-full pb-2'>
           <h1 className='text-2xl font-bold'>Nos différentes espèces</h1>
@@ -38,10 +46,29 @@ const SpeciesView = () => {
             </Carousel>
           )}
 
-          <div>
+          <div className='flex flex-col justify-between'>
             <p className='text-gray-600 sm:text-base text-sm'>
               {species && species[current].description}
             </p>
+            {userInfo?.role === 'admin' && (
+              <>
+                <div className='cursor-pointer'>
+                  <Image
+                    src='/tire.svg'
+                    width={25}
+                    height={25}
+                    alt='tire'
+                    onClick={() =>
+                      document &&
+                      (
+                        document.getElementById('my_modal_2') as HTMLFormElement
+                      ).showModal()
+                    }
+                  />
+                </div>
+                {species && <SpeciesCreationModal specie={species[current]} />}
+              </>
+            )}
           </div>
         </div>
       </div>

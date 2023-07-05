@@ -3,10 +3,10 @@
 import { Area } from '@/context/interface';
 import { sessionAtom } from '@/context/store';
 import { useAtom } from 'jotai';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
 
-const AreaCreationModal = () => {
+const AreaCreationModal = ({ area = false }: { area: Area | false }) => {
   const [session] = useAtom(sessionAtom);
   const [areaForm, setAreaForm] = useState<Area>({
     id: '',
@@ -20,29 +20,83 @@ const AreaCreationModal = () => {
     imagesUrl: [''],
   });
 
+  useEffect(() => {
+    if (area) {
+      setAreaForm(area);
+    }
+  }, [area]);
+
   const handleClick = async () => {
-    if (
-      areaForm.name === '' ||
-      areaForm.capacity === 0 ||
-      areaForm.visiteDuration === 0 ||
-      areaForm.description === '' ||
-      areaForm.schedule === '' ||
-      areaForm.imagesUrl[0] === ''
-    )
-      return toast.error('Veuillez remplir tous les champs');
-    const res = await fetch(`${'http://localhost:3000'}/area`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${session?.accessToken}`,
-      },
-      body: JSON.stringify(areaForm),
-    });
-    const notification = toast.loading("Création de l'espace en cours...");
-    if (res.status === 200) {
-      toast.success('Espace créé avec succès', { id: notification });
+    if (!area) {
+      if (
+        areaForm.name === '' ||
+        areaForm.capacity === 0 ||
+        areaForm.visiteDuration === 0 ||
+        areaForm.description === '' ||
+        areaForm.schedule === '' ||
+        areaForm.imagesUrl[0] === ''
+      )
+        return toast.error('Veuillez remplir tous les champs');
+      const res = await fetch(`${'http://localhost:3000'}/area`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${session?.accessToken}`,
+        },
+        body: JSON.stringify(areaForm),
+      });
+      const notification = toast.loading("Création de l'espace en cours...");
+      if (res.status === 200) {
+        toast.success('Espace créé avec succès', { id: notification });
+        setAreaForm({
+          id: '',
+          name: '',
+          capacity: 0,
+          visiteDuration: 0,
+          description: '',
+          schedule: '',
+          handicapAccess: false,
+          isInMaintenance: false,
+          imagesUrl: [''],
+        });
+      } else {
+        toast.error('Une erreur est survenue', { id: notification });
+      }
     } else {
-      toast.error('Une erreur est survenue', { id: notification });
+      if (
+        areaForm.name === '' ||
+        areaForm.capacity === 0 ||
+        areaForm.visiteDuration === 0 ||
+        areaForm.description === '' ||
+        areaForm.schedule === '' ||
+        areaForm.imagesUrl[0] === ''
+      )
+        return toast.error('Veuillez remplir tous les champs');
+      const res = await fetch(`${'http://localhost:3000'}/area/${area.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${session?.accessToken}`,
+        },
+        body: JSON.stringify(areaForm),
+      });
+      const notification = toast.loading("Mise à jour de l'espace en cours...");
+      if (res.status === 200) {
+        toast.success('Espace mis à jour avec succès', { id: notification });
+        setAreaForm({
+          id: '',
+          name: '',
+          capacity: 0,
+          visiteDuration: 0,
+          description: '',
+          schedule: '',
+          handicapAccess: false,
+          isInMaintenance: false,
+          imagesUrl: [''],
+        });
+      } else {
+        toast.error('Une erreur est survenue', { id: notification });
+      }
     }
   };
 
@@ -52,7 +106,9 @@ const AreaCreationModal = () => {
         <button className='btn btn-sm btn-circle btn-ghost absolute right-2 top-2'>
           ✕
         </button>
-        <h3 className='font-bold text-xl'>Créer un espace</h3>
+        <h3 className='font-bold text-xl'>
+          {area ? "Mise à jour de l'espace" : 'Créer un espace'}
+        </h3>
 
         <div className='flex flex-wrap gap-2 sm:gap-4 mt-4'>
           <div className='form-control w-52 rounded-lg border'>

@@ -31,7 +31,6 @@ const UserCreationModal = () => {
   });
 
   const handleClick = async () => {
-    console.log(userForm);
     if (
       userForm.firstName === '' ||
       userForm.lastName === '' ||
@@ -50,6 +49,14 @@ const UserCreationModal = () => {
     const notification = toast.loading("Ajout de l'utilisateur en cours...");
     if (res.status === 200) {
       toast.success('Utilisateur ajouté avec succès', { id: notification });
+      setUserForm({
+        id: '',
+        firstName: '',
+        lastName: '',
+        email: '',
+        password: '',
+        role: 'undefined',
+      });
     } else {
       toast.error('Une erreur est survenue', { id: notification });
     }

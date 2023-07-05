@@ -7,34 +7,21 @@ import {
   UserCreationModal,
 } from '@/components';
 import SpecieCreationModal from '@/components/modals/SpecieCreationModal';
-import { User } from '@/context/interface';
-import { sessionAtom } from '@/context/store';
+import { getUserInfo } from '@/context/fetch';
+import { sessionAtom, userInfoAtom } from '@/context/store';
 import { useAtom } from 'jotai';
-import { useEffect, useState } from 'react';
-import { Toaster } from 'react-hot-toast';
+import { useEffect } from 'react';
+import { Toaster, toast } from 'react-hot-toast';
 
 const Page = () => {
-  const [session] = useAtom(sessionAtom);
-  const [userInfo, setUserInfo] = useState<User | null>(null);
+  const [session, setSession] = useAtom(sessionAtom);
+  const [userInfo, setUserInfo] = useAtom(userInfoAtom);
 
   useEffect(() => {
-    if (userInfo === null) {
-      if (session !== null) {
-        fetch(`${'http://localhost:3000'}/user/profile`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${session?.accessToken}`,
-          },
-        }).then(async (res) => {
-          if (res.status === 200) {
-            const data = await res.json();
-            setUserInfo(data);
-          }
-        });
-      }
-    }
-  }, [session, userInfo]);
+    getUserInfo(userInfo, session).then((data) => {
+      if (data) setUserInfo(data);
+    });
+  }, [session, userInfo, setUserInfo, setSession]);
 
   return (
     <div className='p-4'>

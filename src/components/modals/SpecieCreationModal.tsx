@@ -3,10 +3,14 @@
 import { Specie } from '@/context/interface';
 import { sessionAtom } from '@/context/store';
 import { useAtom } from 'jotai';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
 
-const SpecieCreationModal = () => {
+const SpecieCreationModal = ({
+  specie = false,
+}: {
+  specie: Specie | false;
+}) => {
   const [session] = useAtom(sessionAtom);
   const [specieForm, setSpecieForm] = useState<Specie>({
     id: '',
@@ -15,28 +19,74 @@ const SpecieCreationModal = () => {
     imgUrl: [''],
   });
 
+  useEffect(() => {
+    if (specie) {
+      setSpecieForm(specie);
+    }
+  }, [specie]);
+
   const handleClick = async () => {
-    if (
-      specieForm.name === '' ||
-      specieForm.description === '' ||
-      specieForm.imgUrl[0] === ''
-    )
-      return toast.error('Veuillez remplir tous les champs');
-    const res = await fetch(`${'http://localhost:3000'}/specie`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${session?.accessToken}`,
-      },
-      body: JSON.stringify(specieForm),
-    });
-    const notification = toast.loading(
-      'Création de la nouvelle espèce en cours...'
-    );
-    if (res.status === 200) {
-      toast.success('Espèce créé avec succès', { id: notification });
+    if (!specie) {
+      if (
+        specieForm.name === '' ||
+        specieForm.description === '' ||
+        specieForm.imgUrl[0] === ''
+      )
+        return toast.error('Veuillez remplir tous les champs');
+      const res = await fetch(`${'http://localhost:3000'}/specie`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${session?.accessToken}`,
+        },
+        body: JSON.stringify(specieForm),
+      });
+      const notification = toast.loading(
+        'Création de la nouvelle espèce en cours...'
+      );
+      if (res.status === 200) {
+        toast.success('Espèce créé avec succès', { id: notification });
+        setSpecieForm({
+          id: '',
+          name: '',
+          description: '',
+          imgUrl: [''],
+        });
+      } else {
+        toast.error('Une erreur est survenue', { id: notification });
+      }
     } else {
-      toast.error('Une erreur est survenue', { id: notification });
+      if (
+        specieForm.name === '' ||
+        specieForm.description === '' ||
+        specieForm.imgUrl[0] === ''
+      )
+        return toast.error('Veuillez remplir tous les champs');
+      const res = await fetch(
+        `${'http://localhost:3000'}/specie/${specie.id}`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${session?.accessToken}`,
+          },
+          body: JSON.stringify(specieForm),
+        }
+      );
+      const notification = toast.loading(
+        'Mise à jour de la nouvelle espèce en cours...'
+      );
+      if (res.status === 200) {
+        toast.success('Espèce mise à jour avec succès', { id: notification });
+        setSpecieForm({
+          id: '',
+          name: '',
+          description: '',
+          imgUrl: [''],
+        });
+      } else {
+        toast.error('Une erreur est survenue', { id: notification });
+      }
     }
   };
 
@@ -46,7 +96,9 @@ const SpecieCreationModal = () => {
         <button className='btn btn-sm btn-circle btn-ghost absolute right-2 top-2'>
           ✕
         </button>
-        <h3 className='font-bold text-xl'>Créer une espèce</h3>
+        <h3 className='font-bold text-xl'>
+          {specie ? "Mise à jour d'une espèce" : 'Créer une espèce'}
+        </h3>
 
         <form action='#' className='mt-8 grid grid-cols-6 gap-6'>
           <div className='col-span-6 sm:col-span-3'>

@@ -8,6 +8,7 @@ import AreaCreationModal from './modals/AreaCreationModal';
 import SpeciesCreationModal from './modals/SpecieCreationModal';
 import AnimalCreationModal from './modals/AnimalCreationModal';
 import UserCreationModal from './modals/UserCreationModal';
+import TableWithUsers from './TableWithUsers';
 
 export {
   Sidebar,
@@ -20,4 +21,5 @@ export {
   SpeciesCreationModal,
   AnimalCreationModal,
   UserCreationModal,
+  TableWithUsers,
 };

@@ -8,7 +8,7 @@ import { toast } from 'react-hot-toast';
 import { getAllSpecies } from '../TopCard';
 import { getAllAreas } from '../AreasView';
 
-const AnimalCreationModal = () => {
+const AnimalCreationModal = ({ updateMode = false }) => {
   const [session] = useAtom(sessionAtom);
   const [animalForm, setAnimalForm] = useState<Animal>({
     id: '',
@@ -37,6 +37,12 @@ const AnimalCreationModal = () => {
     const notification = toast.loading("Ajout de l'animal en cours...");
     if (res.status === 200) {
       toast.success('Animal ajouté avec succès', { id: notification });
+      setAnimalForm({
+        id: '',
+        name: '',
+        specieId: '',
+        areaId: '',
+      });
     } else {
       toast.error('Une erreur est survenue', { id: notification });
     }

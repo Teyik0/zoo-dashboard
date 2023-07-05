@@ -1,9 +1,10 @@
 'use client';
 
-import { useState } from 'react';
-import { Toaster, toast } from 'react-hot-toast';
+import { useRef, useState } from 'react';
+import { toast } from 'react-hot-toast';
 import { useAtom } from 'jotai';
 import { sessionAtom } from '@/context/store';
+import { Session } from '@/context/interface';
 
 interface ProfileForm {
   firstName: string;
@@ -12,6 +13,33 @@ interface ProfileForm {
   password: string;
   passwordConfirmation: string;
 }
+
+const login = async (
+  email: string,
+  password: string
+): Promise<Session | null> => {
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailPattern.test(email)) {
+    toast.error('The mail is not valid');
+    return null;
+  }
+  if (password.length < 8) {
+    toast.error('Password must be at least 8 characters long');
+    return null;
+  }
+  try {
+    const res = await fetch(`${'http://localhost:3000'}/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password }),
+    });
+    const data = await res.json();
+    return data;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+};
 
 const Register = () => {
   const [isLogin, setIsLogin] = useState<boolean>(true);
@@ -24,30 +52,23 @@ const Register = () => {
     passwordConfirmation: '',
   });
 
-  const login = async (email: string, password: string) => {
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailPattern.test(profileForm.email)) {
-      toast.error('The mail is not valid');
-      return;
-    }
-    if (profileForm.password.length < 8) {
-      toast.error('Password must be at least 8 characters long');
-      return;
-    }
-    const res = await fetch(`${'http://localhost:3000'}/auth/login`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password }),
-    });
-    const data = await res.json();
-    return data;
-  };
+  const formRef = useRef<HTMLFormElement>(null);
 
-  const handleClick = () => {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event?.preventDefault();
     if (isLogin) {
-      login(profileForm.email, profileForm.password).then((session) => {
-        setSession(session);
-      });
+      login(profileForm.email, profileForm.password)
+        .then((session) => {
+          if (!session) toast.error('An error has occured');
+          else {
+            setSession(session);
+            toast.success('Logged in');
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+          toast.error('An error has occured');
+        });
     } else if (!isLogin) {
       if (profileForm.password.length < 8) {
         toast.error('Password must be at least 8 characters long');
@@ -168,7 +189,11 @@ const Register = () => {
               </p>
             </div>
 
-            <form action='#' className='mt-8 grid grid-cols-6 gap-6'>
+            <form
+              ref={formRef}
+              onSubmit={(e) => handleSubmit(e)}
+              className='mt-8 grid grid-cols-6 gap-6'
+            >
               {!isLogin && (
                 <>
                   <div className='col-span-6 sm:col-span-3'>
@@ -291,9 +316,9 @@ const Register = () => {
               <div className='col-span-6 sm:flex sm:items-center sm:gap-4'>
                 <button
                   className='inline-block shrink-0 rounded-md border border-blue-600 bg-blue-600 px-12 py-3 text-sm 
-                font-medium text-white transition hover:bg-transparent hover:text-blue-600 focus:outline-none focus:ring
+                  font-medium text-white transition hover:bg-transparent hover:text-blue-600 focus:outline-none focus:ring
                  active:text-blue-500'
-                  onClick={() => handleClick()}
+                  type='submit'
                 >
                   {isLogin ? 'Login' : 'Register'}
                 </button>

@@ -3,9 +3,17 @@
 import Carousel from './Carousel';
 import { useEffect } from 'react';
 import { useAtom } from 'jotai';
-import { currentAreaAtom, sessionAtom, areasAtom } from '@/context/store';
+import {
+  currentAreaAtom,
+  sessionAtom,
+  areasAtom,
+  userInfoAtom,
+} from '@/context/store';
 import { Area } from '@/context/interface';
 import { toast } from 'react-hot-toast';
+import { getUserInfo } from '@/context/fetch';
+import Image from 'next/image';
+import AreaCreationModal from './modals/AreaCreationModal';
 
 export const getAllAreas = async (): Promise<Area[]> => {
   const res = await fetch(`${'http://localhost:3000'}/area`, {
@@ -20,11 +28,15 @@ const AreasView = () => {
   const [current] = useAtom(currentAreaAtom);
   const [areas, setAreas] = useAtom(areasAtom);
   const [session] = useAtom(sessionAtom);
+  const [userInfo, setUserInfo] = useAtom(userInfoAtom);
 
   useEffect(() => {
     getAllAreas().then((areas) => setAreas(areas));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+
+    getUserInfo(userInfo, session).then((data) => {
+      if (data) setUserInfo(data);
+    });
+  }, [session, userInfo, setUserInfo, setAreas]);
 
   return (
     <div className='px-4 pb-4'>
@@ -56,67 +68,88 @@ const AreasView = () => {
           </div>
         </div>
 
-        <div className='flex flex-row flex-wrap gap-2 sm:gap-4 mt-4'>
-          <div className='form-control w-52 rounded-lg border'>
-            <label className='cursor-pointer label'>
-              <span className='label-text'>En Maintenance</span>
-              <input
-                type='checkbox'
-                className='toggle toggle-primary'
-                checked={areas ? areas[current].isInMaintenance : false}
-                onChange={() => {
-                  if (areas)
-                    fetch(
-                      `${'http://localhost:3000'}/area/${areas[current].id}`,
-                      {
-                        method: 'PUT',
-                        headers: {
-                          'Content-Type': 'application/json',
-                          Authorization: `Bearer ${session?.accessToken}`,
-                        },
-                        body: JSON.stringify({
-                          isInMaintenance: !areas[current].isInMaintenance,
-                          imagesUrl: areas[current].imagesUrl,
-                        }),
-                      }
-                    ).then(() => {
-                      toast.success('Espace mis à jour avec succès');
-                      getAllAreas().then((areas) => setAreas(areas));
-                    });
-                }}
-              />
-            </label>
+        <div className='flex justify-between items-center mt-4'>
+          <div className='flex flex-row flex-wrap gap-2 sm:gap-4'>
+            <div className='form-control w-52 rounded-lg border'>
+              <label className='cursor-pointer label'>
+                <span className='label-text'>En Maintenance</span>
+                <input
+                  type='checkbox'
+                  className='toggle toggle-primary'
+                  checked={areas ? areas[current].isInMaintenance : false}
+                  onChange={() => {
+                    if (areas)
+                      fetch(
+                        `${'http://localhost:3000'}/area/${areas[current].id}`,
+                        {
+                          method: 'PUT',
+                          headers: {
+                            'Content-Type': 'application/json',
+                            Authorization: `Bearer ${session?.accessToken}`,
+                          },
+                          body: JSON.stringify({
+                            isInMaintenance: !areas[current].isInMaintenance,
+                            imagesUrl: areas[current].imagesUrl,
+                          }),
+                        }
+                      ).then(() => {
+                        toast.success('Espace mis à jour avec succès');
+                        getAllAreas().then((areas) => setAreas(areas));
+                      });
+                  }}
+                />
+              </label>
+            </div>
+            <div className='form-control w-52 rounded-lg border'>
+              <label className='cursor-pointer label'>
+                <span className='label-text'>Accès handicapé</span>
+                <input
+                  type='checkbox'
+                  className='toggle toggle-secondary'
+                  checked={areas ? areas[current].handicapAccess : false}
+                  onChange={() => {
+                    if (areas)
+                      fetch(
+                        `${'http://localhost:3000'}/area/${areas[current].id}`,
+                        {
+                          method: 'PUT',
+                          headers: {
+                            'Content-Type': 'application/json',
+                            Authorization: `Bearer ${session?.accessToken}`,
+                          },
+                          body: JSON.stringify({
+                            handicapAccess: !areas[current].handicapAccess,
+                            imagesUrl: areas[current].imagesUrl,
+                          }),
+                        }
+                      ).then(() => {
+                        toast.success('Espace mis à jour avec succès');
+                        getAllAreas().then((areas) => setAreas(areas));
+                      });
+                  }}
+                />
+              </label>
+            </div>
           </div>
-          <div className='form-control w-52 rounded-lg border'>
-            <label className='cursor-pointer label'>
-              <span className='label-text'>Accès handicapé</span>
-              <input
-                type='checkbox'
-                className='toggle toggle-secondary'
-                checked={areas ? areas[current].handicapAccess : false}
-                onChange={() => {
-                  if (areas)
-                    fetch(
-                      `${'http://localhost:3000'}/area/${areas[current].id}`,
-                      {
-                        method: 'PUT',
-                        headers: {
-                          'Content-Type': 'application/json',
-                          Authorization: `Bearer ${session?.accessToken}`,
-                        },
-                        body: JSON.stringify({
-                          handicapAccess: !areas[current].handicapAccess,
-                          imagesUrl: areas[current].imagesUrl,
-                        }),
-                      }
-                    ).then(() => {
-                      toast.success('Espace mis à jour avec succès');
-                      getAllAreas().then((areas) => setAreas(areas));
-                    });
-                }}
-              />
-            </label>
-          </div>
+          {userInfo?.role === 'admin' && (
+            <>
+              <div className='hover:bg-slate-200 p-2 rounded-lg cursor-pointer'>
+                <Image
+                  src='/tire.svg'
+                  width={25}
+                  height={25}
+                  alt='tire'
+                  onClick={() =>
+                    document &&
+                    (
+                      document.getElementById('my_modal_1') as HTMLFormElement
+                    ).showModal()
+                  }
+                />
+              </div>
+              {areas && <AreaCreationModal area={areas[current]} />}
+            </>
+          )}
         </div>
       </div>
     </div>

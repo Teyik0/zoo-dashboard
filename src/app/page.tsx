@@ -1,4 +1,4 @@
-import { AreasView, SpeciesView, TopCard } from '@/components';
+import { AreasView, SpeciesView, TableWithUsers, TopCard } from '@/components';
 import { Toaster } from 'react-hot-toast';
 
 export default function Home() {
@@ -8,6 +8,7 @@ export default function Home() {
       <Toaster />
       <AreasView />
       <SpeciesView />
+      <TableWithUsers />
     </main>
   );
 }
