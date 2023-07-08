@@ -144,10 +144,10 @@ const AnimalCreationModal = ({
           </div>
         </form>
         <div className='mt-4 flex flex-wrap gap-4'>
-          {species && (
+          {species !== null && (
             <select
               className='select select-bordered w-full max-w-xs focus:outline-none'
-              value={!animal ? species[0].id : animal.specieId}
+              value={!animal ? animalForm.specieId : animal.specieId}
               onChange={(e) =>
                 setAnimalForm({ ...animalForm, specieId: e.target.value })
               }
@@ -162,7 +162,7 @@ const AnimalCreationModal = ({
           {areas && (
             <select
               className='select select-bordered w-full max-w-xs focus:outline-none'
-              value={!animal ? areas[0].id : animal.areaId}
+              value={!animal ? animalForm.areaId : animal.areaId}
               onChange={(e) =>
                 setAnimalForm({ ...animalForm, areaId: e.target.value })
               }

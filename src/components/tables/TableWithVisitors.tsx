@@ -3,12 +3,20 @@
 import { useEffect, useState } from 'react';
 import { useAtom } from 'jotai';
 import { sessionAtom, userInfoAtom, usersAtom } from '@/context/store';
-import { Session, Visitor } from '@/context/interface';
+import { Session, User, Visitor } from '@/context/interface';
 import { getUserInfo } from '@/context/fetch';
 
 const TableWithVisitors = () => {
   const [session] = useAtom(sessionAtom);
   const [visitors, setVisitors] = useState<Visitor[] | null>(null);
+  const [userInfo, setUserInfo] = useAtom(userInfoAtom);
+  const [visitorToModify, setVisitorToModify] = useState<Visitor | null>(null);
+
+  useEffect(() => {
+    getUserInfo(userInfo, session).then((data) => {
+      if (data) setUserInfo(data);
+    });
+  }, [session, setUserInfo, userInfo]);
 
   useEffect(() => {
     fetch('http://localhost:3000/visitor').then((res) => {
@@ -25,6 +33,7 @@ const TableWithVisitors = () => {
         });
     });
   }, []);
+
   return (
     <div className='px-4 py-4'>
       <h1 className='px-4 py-4 font-bold text-2xl border rounded-t-lg'>
@@ -40,13 +49,13 @@ const TableWithVisitors = () => {
               <th></th>
             </tr>
             {session &&
+              userInfo &&
               visitors?.map((visitor) => (
                 <Row
                   key={visitor.id}
-                  name={visitor.firstName + ' ' + visitor.lastName}
-                  email={visitor?.email || 'N/A'}
-                  role={visitor?.isCurrentlyInArea?.name || 'N/A'}
+                  visitor={visitor}
                   session={session}
+                  userInfo={userInfo}
                 />
               ))}
           </tbody>
@@ -57,32 +66,24 @@ const TableWithVisitors = () => {
 };
 
 interface RowProps {
-  name: string;
-  email: string;
-  role: string;
+  visitor: Visitor;
   session: Session;
+  userInfo: User;
 }
 
-const Row = ({ name, email, role, session }: RowProps) => {
-  const [userInfo, setUserInfo] = useAtom(userInfoAtom);
-  useEffect(() => {
-    getUserInfo(userInfo, session).then((data) => {
-      if (data) setUserInfo(data);
-    });
-  }, [session, setUserInfo, userInfo]);
-
+const Row = ({ visitor, session, userInfo }: RowProps) => {
   return (
     <tr
       className={`border text-base text-black bg-gray-100 hover:bg-slate-200`}
     >
       <td scope='row' className='px-6 py-4 first-letter:capitalize'>
-        {name}
+        {visitor.firstName + ' ' + visitor.lastName}
       </td>
       <td scope='row' className='px-6 py-4 first-letter:capitalize'>
-        {email}
+        {visitor?.email || 'N/A'}
       </td>
       <td scope='row' className='px-6 py-4 first-letter:capitalize'>
-        {role}
+        {visitor?.isCurrentlyInArea?.name || 'N/A'}
       </td>
       {userInfo?.role === 'admin' && (
         <td className='flex justify-end gap-4 py-4 px-6'>
