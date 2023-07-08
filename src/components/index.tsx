@@ -1,14 +1,16 @@
 import Sidebar from './Sidebar';
 import TopCard from './TopCard';
-import AreasView from './AreasView';
+import AreasView from './views/AreasView';
 import Carousel from './Carousel';
 import Register from './Register';
-import SpeciesView from './SpeciesView';
+import SpeciesView from './views/SpeciesView';
 import AreaCreationModal from './modals/AreaCreationModal';
 import SpeciesCreationModal from './modals/SpecieCreationModal';
 import AnimalCreationModal from './modals/AnimalCreationModal';
 import UserCreationModal from './modals/UserCreationModal';
-import TableWithUsers from './TableWithUsers';
+import TableWithUsers from './tables/TableWithUsers';
+import TableWithAnimals from './tables/TableWithAnimals';
+import TableWitchVisitor from './tables/TableWithVisitors';
 
 export {
   Sidebar,
@@ -22,4 +24,6 @@ export {
   AnimalCreationModal,
   UserCreationModal,
   TableWithUsers,
+  TableWithAnimals,
+  TableWitchVisitor,
 };

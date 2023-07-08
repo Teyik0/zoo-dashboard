@@ -15,6 +15,8 @@ export interface Animal {
   name: string;
   specieId: string;
   areaId: string;
+  specie?: Specie;
+  area?: Area;
 }
 
 export interface User {
@@ -57,6 +59,7 @@ export interface Visitor {
   lastName: string;
   email: string;
   areaId?: string;
+  isCurrentlyInArea?: Area;
 }
 
 export interface Billet {

@@ -1,6 +1,6 @@
 'use client';
 
-import Carousel from './Carousel';
+import Carousel from '../Carousel';
 import { useEffect } from 'react';
 import { useAtom } from 'jotai';
 import {
@@ -13,7 +13,7 @@ import { Area } from '@/context/interface';
 import { toast } from 'react-hot-toast';
 import { getUserInfo } from '@/context/fetch';
 import Image from 'next/image';
-import AreaCreationModal from './modals/AreaCreationModal';
+import AreaCreationModal from '../modals/AreaCreationModal';
 
 export const getAllAreas = async (): Promise<Area[]> => {
   const res = await fetch(`${'http://localhost:3000'}/area`, {

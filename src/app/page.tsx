@@ -1,4 +1,11 @@
-import { AreasView, SpeciesView, TableWithUsers, TopCard } from '@/components';
+import {
+  AreasView,
+  SpeciesView,
+  TableWithAnimals,
+  TableWithUsers,
+  TopCard,
+} from '@/components';
+import TableWithVisitors from '@/components/tables/TableWithVisitors';
 import { Toaster } from 'react-hot-toast';
 
 export default function Home() {
@@ -9,6 +16,8 @@ export default function Home() {
       <AreasView />
       <SpeciesView />
       <TableWithUsers />
+      <TableWithAnimals />
+      <TableWithVisitors />
     </main>
   );
 }

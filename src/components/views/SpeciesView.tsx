@@ -1,13 +1,13 @@
 'use client';
 
-import Carousel from './Carousel';
+import Carousel from '../Carousel';
 import { useEffect, useState } from 'react';
 import { useAtom } from 'jotai';
 import { currentSpecieAtom, sessionAtom, userInfoAtom } from '@/context/store';
 import { Specie } from '@/context/interface';
-import { getAllSpecies } from './TopCard';
+import { getAllSpecies } from '../TopCard';
 import Image from 'next/image';
-import { SpeciesCreationModal } from '.';
+import { SpeciesCreationModal } from '..';
 import { getUserInfo } from '@/context/fetch';
 
 const SpeciesView = () => {
