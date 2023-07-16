@@ -1,0 +1,115 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model Billet {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  category      Category
+  pass          Pass
+  price         Float
+  autorizedArea Area[]   @relation(fields: [areaId], references: [id])
+  areaId        String[] @db.ObjectId
+  visitor       Visitor  @relation(fields: [visitorId], references: [id])
+  visitorId     String   @db.ObjectId
+  expiredAt     DateTime
+  createdAt     DateTime @default(now())
+  isExpired     Boolean  @default(false)
+}
+
+enum Category {
+  adulte
+  etudiant
+  enfant
+}
+
+enum Pass {
+  daily
+  weekend
+  annual
+  oneDayMonth
+}
+
+model Area {
+  id              String    @id @default(auto()) @map("_id") @db.ObjectId
+  name            String    @unique
+  capacity        Int
+  visiteDuration  Int
+  description     String
+  schedule        String
+  handicapAccess  Boolean
+  isInMaintenance Boolean
+  imagesUrl       String[]
+  animals         Animal[]
+  billet          Billet[]  @relation(fields: [billetId], references: [id])
+  billetId        String[]  @db.ObjectId
+  visitor         Visitor[]
+}
+
+model Animal {
+  id       String @id @default(auto()) @map("_id") @db.ObjectId
+  name     String
+  specie   Specie @relation(fields: [specieId], references: [id])
+  specieId String @db.ObjectId
+  area     Area   @relation(fields: [areaId], references: [id])
+  areaId   String @db.ObjectId
+}
+
+model Specie {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  description String
+  imgUrl      String[]
+  Animal      Animal[]
+}
+
+model User {
+  id            String         @id @default(auto()) @map("_id") @db.ObjectId
+  firstName     String
+  lastName      String
+  email         String         @unique
+  password      String
+  refreshTokens RefreshToken[]
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  role          Role           @default(undefined)
+}
+
+enum Role {
+  receptioniste
+  veterinaire
+  agentEntretien
+  vendeur
+  undefined
+  admin
+}
+
+model Visitor {
+  id                String   @id @default(auto()) @map("_id") @db.ObjectId
+  firstName         String
+  lastName          String
+  email             String   @unique
+  billet            Billet[]
+  isCurrentlyInArea Area?    @relation(fields: [areaId], references: [id])
+  areaId            String?  @db.ObjectId
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+model RefreshToken {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  jtiId       String   @unique
+  hashedToken String
+  userId      String   @db.ObjectId
+  User        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  revoked     Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}

@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  api:
+    build: 
+      context: .
+    restart: always
+    env_file:
+      - .env
+    container_name: api-zoo
+    networks:
+      - zoo_network
+    ports:
+      - 3000:3000
+
+networks:
+  zoo_network:
+    external: true
+      
