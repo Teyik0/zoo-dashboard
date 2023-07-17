@@ -1,9 +1,8 @@
 version: '3.8'
 services:
   web:
-    #build:
-     # context: .
-    image: next
+    build:
+      context: .
     env_file:
       - .env.local
     restart: always

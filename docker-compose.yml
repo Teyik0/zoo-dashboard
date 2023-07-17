@@ -8,26 +8,24 @@ services:
     env_file:
       - ./server/.env
     container_name: api-zoo
-    networks:
-      - zoo_network
     ports:
       - 3000:3000
+    #networks:
+     # - zoo_network
 
   web:
     build:
       context: ./client
-    depends_on:
-      - api
     env_file:
       - ./client/.env.local
     restart: always
     container_name: zoo-dashboard
-    networks:
-      - zoo_network
     ports:
       - "3001:3001"
+    #networks:
+     # - zoo_network
 
-networks:
-  zoo_network:
-    external: true
+#networks:
+ # zoo_network:
+  #  external: true
       

@@ -11,7 +11,7 @@ import { Toaster } from 'react-hot-toast';
 export default function Home() {
   return (
     <main>
-      {/* <TopCard /> */}
+      <TopCard />
       <Toaster />
       <AreasView />
       <SpeciesView />

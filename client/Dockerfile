@@ -2,10 +2,11 @@ FROM node:18-alpine AS deps
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-COPY package.json yarn.lock ./
+COPY ./package.json ./yarn.lock ./
 RUN  yarn install
 
 FROM node:18-alpine AS builder
+#RUN apk update && apk add --no-cache bash curl
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
@@ -13,7 +14,7 @@ COPY . .
 ENV NEXT_TELEMETRY_DISABLED 1
 
 EXPOSE 3001
-
+#RUN bash -c "./wait-for-api.sh"
 RUN yarn build
 
 FROM node:18-alpine AS runner
@@ -37,3 +38,5 @@ USER nextjs
 EXPOSE 3001
 
 CMD yarn start -p 3001
+
+#nairi.amin@gmail.com
