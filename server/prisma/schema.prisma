@@ -35,6 +35,8 @@ enum Pass {
   weekend
   annual
   oneDayMonth
+  night
+  escapeGame
 }
 
 model Area {

@@ -63,7 +63,7 @@ const Page = () => {
                     <span className='text-sm italic'>évaluations</span>
                     <div className='border border-black w-full my-2' />
                     2 <br />
-                    <span className='text-sm italic'>mois sur CarHub</span>
+                    <span className='text-sm italic'>mois sur Zoo</span>
                   </div>
                 </div>
               </div>
@@ -141,9 +141,9 @@ const Page = () => {
                 Il est temps de créer votre profil
               </h2>
               <p className='mt-4 text-gray-500 text-sm'>
-                Votre profil CarHub joue un rôle important dans toutes les
-                réservations. Créez le vôtre pour aider les utilisateurs à mieux
-                vous connaître.
+                Votre profil Zoo joue un rôle important dans toute
+                l&apos;administration. Créez le vôtre pour aider les
+                utilisateurs à mieux vous connaître.
               </p>
               <button className='px-4 py-2 border border-black rounded-lg hover:bg-slate-600 hover:text-white mt-6'>
                 Créer un profil
