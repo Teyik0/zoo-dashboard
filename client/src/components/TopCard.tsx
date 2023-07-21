@@ -1,17 +1,19 @@
+'use client';
+
 import { getAllAnimals, getAllSpecies, getAllVisitors } from '@/context/fetch';
 import { Animal, Specie, Visitor } from '@/context/interface';
 import { useEffect, useState } from 'react';
 
-const TopCard = async () => {
-  const animals: Animal[] = await getAllAnimals();
-  const species: Specie[] = await getAllSpecies();
-  const visitors: Visitor[] = await getAllVisitors();
+const TopCard = () => {
+  //const animals: Animal[] = await getAllAnimals();
+  //const species: Specie[] = await getAllSpecies();
+  //const visitors: Visitor[] = await getAllVisitors();
 
-  //const [animals, setAnimals] = useState<Animal[]>([]);
-  //const [species, setSpecies] = useState<Specie[]>([]);
-  //const [visitors, setVisitors] = useState<Visitor[]>([]);
+  const [animals, setAnimals] = useState<Animal[]>([]);
+  const [species, setSpecies] = useState<Specie[]>([]);
+  const [visitors, setVisitors] = useState<Visitor[]>([]);
 
-  /* useEffect(() => {
+  useEffect(() => {
     getAllAnimals()
       .then((data) => {
         if (data) setAnimals(data);
@@ -33,7 +35,7 @@ const TopCard = async () => {
       .catch((error) => {
         console.log(error);
       });
-  }, []); */
+  }, []);
 
   return (
     <div className='grid lg:grid-cols-3 gap-4 p-4'>

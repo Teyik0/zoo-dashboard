@@ -46,17 +46,14 @@ const VisitorCreationModal = ({
         visitorForm.email === ''
       )
         return toast.error('Veuillez remplir tous les champs');
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/auth/register`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${session?.accessToken}`,
-          },
-          body: JSON.stringify(visitorForm),
-        }
-      );
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/visitor`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${session?.accessToken}`,
+        },
+        body: JSON.stringify(visitorForm),
+      });
       const notification = toast.loading("Ajout de l'utilisateur en cours...");
       if (res.status === 200) {
         toast.success('Utilisateur ajouté avec succès', { id: notification });
