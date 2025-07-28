@@ -1,8 +1,8 @@
-version: '3.8'
+version: "3.8"
 
 services:
   api:
-    build: 
+    build:
       context: ./server
     restart: always
     env_file:
@@ -10,8 +10,6 @@ services:
     container_name: api-zoo
     ports:
       - 3000:3000
-    #networks:
-     # - zoo_network
 
   web:
     build:
@@ -22,10 +20,3 @@ services:
     container_name: zoo-dashboard
     ports:
       - "3001:3001"
-    #networks:
-     # - zoo_network
-
-#networks:
- # zoo_network:
-  #  external: true
-      
